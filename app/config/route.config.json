@@ -1,0 +1,9 @@
+{
+  "routes": [
+    {
+      "route": "/v1/google",
+      "method": "POST",
+      "controller": "../controllers/v1/google/google-controller"
+    }
+  ]
+}
