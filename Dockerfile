@@ -16,6 +16,7 @@ RUN npm install
 
 # Bundle app source
 COPY . .
+RUN cp config_docker.json config.json
 
 EXPOSE 9000 
 CMD [ "npm", "run", "start" ]

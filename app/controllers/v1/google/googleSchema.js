@@ -1,5 +1,6 @@
 var Schema = require('graph.ql');
 var Promise = require('promise');
+var mongoDriver = require('./mongoDriver')
 
 module.exports = 
 	Schema(`
@@ -74,17 +75,25 @@ module.exports =
 				Query: {
 					find_one(data) {
 						return new Promise((resolve) => {
+
 							var GooglePlaces = require("googleplaces")
 							    ("AIzaSyBWNOAENHH3RKYOFUX3yWT6AOp5PUNI2m4", "json");
 
-							//ChIJh6X7F0cvQg0R3WI6x2CY8V4
-							GooglePlaces.placeDetailsRequest(
-							    {placeid: data.id}, 
-							    function (error, response) {
-							    if (error) throw error;
-							    console.log(response)
-							    resolve(response);
+							mongoDriver.get(data.id).then((doc) => {
+								if (doc != null) {
+									resolve(doc);
+									return;
+								}
+								//ChIJh6X7F0cvQg0R3WI6x2CY8V4
+								GooglePlaces.placeDetailsRequest(
+								    {placeid: data.id}, 
+								    function (error, response) {
+								    if (error) throw error;
+									mongoDriver.insert(response)
+								    resolve(response);
+								})
 							})
+
 						})
 					}
 
